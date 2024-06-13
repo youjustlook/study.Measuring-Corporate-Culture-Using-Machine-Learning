@@ -19,7 +19,7 @@ def process_largefile(
     input_file_ids,
     output_index_file,
     function_name,
-    chunk_size=100,
+    chunk_size=200,
     start_index=None,
 ):
     """ A helper function that transforms an input file + a list of IDs of each line (documents + document_IDs) to two output files (processed documents + processed document IDs) by calling function_name on chunks of the input files. Each document can be decomposed into multiple processed documents (e.g. sentences). 
@@ -65,8 +65,8 @@ def process_largefile(
             line_i += chunk_size
             print(datetime.datetime.now())
             print(f"Processing line: {line_i}.")
-            next_n_lines = list(filter(None.__ne__, next_n_lines))
-            next_n_line_ids = list(filter(None.__ne__, next_n_line_ids))
+            next_n_lines = list(filter(lambda x: x is not None, next_n_lines))
+            next_n_line_ids = list(filter(lambda x: x is not None, next_n_line_ids))
             output_lines = []
             output_line_ids = []
             with Pool(global_options.N_CORES) as pool:
@@ -77,10 +77,10 @@ def process_largefile(
                     output_line_ids.append(output_line_id)
             output_lines = "\n".join(output_lines) + "\n"
             output_line_ids = "\n".join(output_line_ids) + "\n"
-            with open(output_file, "a", newline="\n") as f_out:
+            with open(output_file, "a", newline="\n",encoding='utf-8') as f_out:
                 f_out.write(output_lines)
             if output_index_file is not None:
-                with open(output_index_file, "a", newline="\n") as f_out:
+                with open(output_index_file, "a", newline="\n",encoding='utf-8') as f_out:
                     f_out.write(output_line_ids)
 
 
@@ -114,3 +114,4 @@ if __name__ == "__main__":
             function_name=preprocess_parallel.process_document,
             chunk_size=global_options.PARSE_CHUNK_SIZE,
         )
+    

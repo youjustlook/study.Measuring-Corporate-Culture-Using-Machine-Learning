@@ -82,8 +82,8 @@ def process_largefile(
             line_i += chunk_size
             print(datetime.datetime.now())
             print(f"Processing line: {line_i}.")
-            next_n_lines = list(filter(None.__ne__, next_n_lines))
-            next_n_line_ids = list(filter(None.__ne__, next_n_line_ids))
+            next_n_lines = list(filter(lambda x: x is not None, next_n_lines))
+            next_n_line_ids = list(filter(lambda x: x is not None, next_n_line_ids))
             output_lines = []
             output_line_ids = []
             # Use parse_parallel.py to speed things up
@@ -94,10 +94,10 @@ def process_largefile(
                 output_line_ids.append(output_line_id)
             output_lines = "\n".join(output_lines) + "\n"
             output_line_ids = "\n".join(output_line_ids) + "\n"
-            with open(output_file, "a", newline="\n") as f_out:
+            with open(output_file, "a", newline="\n", encoding="utf-8", errors="ignore") as f_out:
                 f_out.write(output_lines)
             if output_index_file is not None:
-                with open(output_index_file, "a", newline="\n") as f_out:
+                with open(output_index_file, "a", newline="\n", encoding="utf-8", errors="ignore") as f_out:
                     f_out.write(output_line_ids)
 
 

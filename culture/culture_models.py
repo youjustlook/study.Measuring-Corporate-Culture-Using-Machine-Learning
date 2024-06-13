@@ -36,8 +36,7 @@ def train_bigram_model(input_path, model_path):
         tqdm.tqdm(corpus, total=n_lines),
         min_count=global_options.PHRASE_MIN_COUNT,
         scoring="default",
-        threshold=global_options.PHRASE_THRESHOLD,
-        common_terms=global_options.STOPWORDS,
+        threshold=global_options.PHRASE_THRESHOLD
     )
     bigram_model.save(str(model_path))
     return bigram_model
